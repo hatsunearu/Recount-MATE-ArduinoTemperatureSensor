@@ -1,6 +1,6 @@
 //Recount Inc. 
 //Underwater Temperature Probe for MATE ROV
-//Version 2.00 Beta
+//Version 2.01 Beta
 
 #include <Servo.h>
 #include <SoftwareSerial.h>
@@ -16,17 +16,18 @@ long startMillis = 0;
 int measurements = 0;
 
 //editable section begins
-const int interval = 2;  //time between measurements
+const int interval = 1;  //time between measurements
 const int samples = 250; //samples to take and average
 const int sampleDelay = 1; //time between individual samples in ms
 const float calibration = 0;
 //editable section ends
 
 void setup() {
+  Serial.begin(9600);
   pinMode(TxPin,OUTPUT);
   digitalWrite(TxPin, HIGH);
   
-  mySerial.begin(9600);
+  mySerial.begin(2400);
   delay(100);
   mySerial.write(12);
   mySerial.write(18);
@@ -39,18 +40,24 @@ void setup() {
 }
 
 void loop() {
-  
-  if(millis() - startMillis >= measurements*interval*1000) {
+
+  if(millis() - startMillis >= measurements*interval*1000L) {
       measure();
       mySerial.write(12);
       mySerial.write(17);
       mySerial.print("t=");
+      Serial.print("Time=");
       mySerial.print(measurements*interval);
+      Serial.print(measurements*interval);
       mySerial.print("s");
+      Serial.print("s");
       mySerial.write(13);
-      mySerial.print("T=");
+      mySerial.print(" T=");
+      Serial.print("Temperature=")
       mySerial.print(mean);
+      Serial.print(mean);
       mySerial.print(" sd=");
+      Serial.println(sd);
       mySerial.print(sd);
       delay(500);
       mySerial.write(18);

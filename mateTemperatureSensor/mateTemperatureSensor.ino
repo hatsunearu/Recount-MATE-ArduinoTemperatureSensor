@@ -7,6 +7,7 @@
 
 const int temPin = 0;
 const int TxPin = 6;
+const int speakerPin = 7;
 
 SoftwareSerial mySerial = SoftwareSerial(255, TxPin);
 float mean;
@@ -25,9 +26,10 @@ const float calibration = 0;
 void setup() {
   Serial.begin(9600);
   pinMode(TxPin,OUTPUT);
+  pinMode(speakerPin, OUTPUT);
   digitalWrite(TxPin, HIGH);
   
-  mySerial.begin(2400);
+  mySerial.begin(9600);
   delay(100);
   mySerial.write(12);
   mySerial.write(18);
@@ -35,34 +37,34 @@ void setup() {
   mySerial.print("Recount Inc.");
   mySerial.write(13);
   mySerial.print("Thermometer 2.0");
-  delay(2000);
+  delay(1000);
   startMillis = millis();
 }
 
 void loop() {
+      digitalWrite(speakerPin, LOW);
 
   if(millis() - startMillis >= measurements*interval*1000L) {
+      digitalWrite(speakerPin, HIGH);
       measure();
       mySerial.write(12);
       mySerial.write(17);
       mySerial.print("t=");
-      Serial.print("Time=");
       mySerial.print(measurements*interval);
-      Serial.print(measurements*interval);
       mySerial.print("s");
-      Serial.print("s");
       mySerial.write(13);
-      mySerial.print(" T=");
-      Serial.print("Temperature=")
+      mySerial.print("T=");
       mySerial.print(mean);
-      Serial.print(mean);
       mySerial.print(" sd=");
-      Serial.println(sd);
       mySerial.print(sd);
-      delay(500);
+      
+      digitalWrite(speakerPin, LOW);
+      delay(300);
       mySerial.write(18);
-    
-    ++measurements;
+      
+      Serial.println(analogRead(0) * 5.0 / 1024.0);
+      
+      ++measurements;
   }
   
     //delay(interval * 1000 - 500 - samples*sampleDelay);
@@ -91,7 +93,7 @@ void measure() {
 }
 
 float getTemp() {
- return (analogRead(temPin) * 0.004882814 -0.5) * 100 + calibration;
+ return (analogRead(temPin) * 0.004882814 - 0.5) * 100 + calibration;
 }
 
 

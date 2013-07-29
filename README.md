@@ -2,9 +2,7 @@
 
 Singapore American School
 
-This simple Arduino sketch reads temperature from a TMP36 digital temperature sensor,  average 10 readings, then prints the results over Arduino serial connection.
-This code is to be used for the 2013 MATE ROV Competition task.
-This code has been tested only on an Arduino Uno.
+This repository contains the schematics written in gEDA and Arduino code for an underwater temperature sensor for use in the 2012 MATE ROV Competition.
 
 ------ 
 
